@@ -26,5 +26,8 @@ pip install -r requirements.txt # Install the latest version of libraries
 ### Author
 
 - [Huu Quoc Doan - s3927776](https://github.com/Mudoker)
+- [Seokyung Kim - s3927776](https://github.com/Mudoker)
+- [Nguyen Dinh Viet - s3927776](https://github.com/Mudoker)
+- [Tran Vu Quang Anh - s3927776](https://github.com/Mudoker)
 
 _I declare that in submitting all work for this assessment I have read, understood and agree to the content and expectations of the Assessment declaration._
