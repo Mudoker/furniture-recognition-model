@@ -2,8 +2,8 @@ import os
 import zipfile
 import shutil
 from PIL import Image
-
-# import image hashing libraries
+from skimage.metrics import structural_similarity as ssim
+import numpy as np
 import imagehash
 
 import matplotlib.pyplot as plt
@@ -71,22 +71,33 @@ class Leon:
         """
         images = []
         count = 0
+
+        # Read the images from the directory
         for root, _, files in os.walk(path):
             for file in files:
                 if file.endswith((".png", ".jpg", ".jpeg")):
+                    # Open the image file
                     image_path = os.path.join(root, file)
+
+                    # Read the image and close the file  afterwards
                     with open(image_path, "rb") as f:
                         image = Image.open(f)
+
+                        # Display the image
                         if show:
                             plt.imshow(image)
                             plt.axis("off")
                             plt.show()
                         images.append(image)
+
                         count += 1
                         if limit != -1 and count >= limit:
                             return images
+
+        # Empty directory
         if count == 0:
             print("No images found in the directory.")
+
         return images
 
     def detect_duplicates(
@@ -105,27 +116,48 @@ class Leon:
             list of str: List of perceptual hash strings.
             list of PIL.Image.Image: List of duplicate images.
         """
+
+        # Dictionary to store the hashes of the images
         hashes = {}
         duplicate_images = []
         duplicate_images_names = []
         count = 0
 
+        # Hash function based on the hash_type
+        if hash_type == "phash":
+            hash_function = imagehash.phash
+        elif hash_type == "dhash":
+            hash_function = imagehash.dhash
+        elif hash_type == "ahash":
+            hash_function = imagehash.average_hash
+        elif hash_type == "ssim":
+            pass
+        else:
+            raise ValueError(
+                "Invalid hash type. Use 'phash', 'dhash', 'ahash' or 'ssim'."
+            )
+
         # Read the images from the directory
         for root, _, files in os.walk(path):
             for file in files:
                 if file.endswith((".png", ".jpg", ".jpeg")):
+                    # Open the image file
                     image_path = os.path.join(root, file)
                     image = Image.open(image_path)
 
-                    if hash_type == "phash":
-                        hash_function = imagehash.phash
-                    elif hash_type == "dhash":
-                        hash_function = imagehash.dhash
-                    elif hash_type == "ahash":
-                        hash_function = imagehash.average_hash
+                    # Compute the hash of the image
+                    if hash_type == "ssim":
+                        min_side = min(image.size)
+                        win_size = min(
+                            7, min_side
+                        )  # Adjust 7 as necessary based on the smallest expected image dimension
+                        hash = lambda img: ssim(
+                            np.array(img), np.array(img), win_size=win_size
+                        )
+                    else:
+                        hash = hash_function(image)
 
-                    hash = str(hash_function(image))
-
+                    # Check if the hash already exists in the dictionary
                     if hash in hashes:
                         duplicate_images.append(image)
 
@@ -134,24 +166,27 @@ class Leon:
                     else:
                         hashes[hash] = image
 
+                    # Increment the count
                     count += 1
                     if limit != -1 and count >= limit:
                         break
-            if limit != -1 and count >= limit:
-                break
 
         print(f"Number of images processed: {count}")
+
+        # Display duplicate images side by side
         if show:
-            # Display duplicate images side by side
+            # Get the number of duplicate images
             num_duplicates = len(duplicate_images)
             print(f"Number of duplicate images found: {num_duplicates}")
-            if num_duplicates > 1:
-                image_path = os.path.join(root, file)
 
+            # Display the duplicate images
+            if num_duplicates > 1:
+                # Show the paths of duplicate images
                 print("Paths of duplicate images:")
                 for path in duplicate_images_names:
                     print(path)
 
+                # Display the duplicate images in a grid
                 num_rows = (num_duplicates + col_num - 1) // col_num
                 fig, axs = plt.subplots(
                     num_rows, min(num_duplicates, col_num), figsize=(20, 12)
