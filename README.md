@@ -2,27 +2,27 @@
 
 ## _Furniture Detection and Classification_
 
-This project aims to develop a machine learning model that can detect furniture items and classify them into corresponding categories and types based on images. By analyzing various features and characteristics of furniture pieces, the model can learn patterns that differentiate between different categories such as chairs, tables, sofas, etc., and further classify them into specific types within each category.
+This project endeavors to construct a machine learning model capable of identifying furniture items and categorizing them into respective types based on image analysis. By scrutinizing diverse features and attributes of furniture pieces, the model can discern patterns distinguishing between various categories like chairs, tables, sofas, etc., and further subdivide them into specific types within each category.
 
 ### Project Setup Guide
 
-This guide outlines the necessary steps to set up the project structure for managing datasets and notebooks effectively. Moreover, please notice that changes in the file location might result in libraries not importing correctly.
+This guide delineates the essential steps to establish the project structure for efficient management of datasets and notebooks. Additionally, it's crucial to note that alterations in file locations may lead to improper library imports.
 
-As the dataset is too large to be uploaded to GitHub, it is stored in a One Drive folder. Please download the dataset from the following link:
+Since the dataset exceeds the upload limit of GitHub, it is housed in a OneDrive folder. Please procure the dataset from the provided link:
 
 [Dataset](https://rmiteduau-my.sharepoint.com/personal/bao_nguyenthien_rmit_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments%2FFurniture_Data%2Ezip&parent=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments&ga=1)
 
-After downloading the dataset, extract the files and place them in the `data/raw` folder
+Once the dataset is obtained, extract the files and deposit them into the `data/raw` folder. Ensure not to alter the name of the zip file.
 
 ### Installation
 
-Before running this notebook, ensure you have the necessary libraries installed.
+Prior to executing this notebook, ensure the requisite libraries are installed.
 
-- #### **Get the latest version of Python**
+- #### **Obtain the latest version of Python**
 
   - Python 3.12.2: [Downloads](https://www.python.org/downloads/).
 
-- #### **Get the packages**
+- #### **Acquire the packages**
 
 ```bash
 pip install -r requirements.txt # Install the latest version of libraries
@@ -31,8 +31,8 @@ pip install -r requirements.txt # Install the latest version of libraries
 ### Author
 
 - [Huu Quoc Doan - s3927776](https://github.com/Mudoker)
-- [Seokyung Kim - s3927776](https://github.com/Mudoker)
-- [Nguyen Dinh Viet - s3927776](https://github.com/Mudoker)
-- [Tran Vu Quang Anh - s3927776](https://github.com/Mudoker)
+- [Seokyung Kim - s3939114@rmit.edu.vn](https://github.com/Mudoker)
+- [Nguyen Dinh Viet - s3927291@rmit.edu.vn](https://github.com/Mudoker)
+- [Tran Vu Quang Anh - s3916566@rmit.edu.vn](https://github.com/Mudoker)
 
 _I declare that in submitting all work for this assessment I have read, understood and agree to the content and expectations of the Assessment declaration._
