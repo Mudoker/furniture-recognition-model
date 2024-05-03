@@ -2,6 +2,10 @@ import os
 import zipfile
 import shutil
 from PIL import Image
+
+# import image hashing libraries
+import imagehash
+
 import matplotlib.pyplot as plt
 
 version = "1.0.3"
@@ -54,13 +58,14 @@ class Leon:
         # Delete the ZIP file
         os.remove(path)
 
-    def read_images(self, path, limit=10):
+    def read_images(self, path, limit=10, show=True):
         """
         Reads image files contained within the directory.
 
         Parameters:
             extract_dir (str): The directory containing the image files.
-
+            limit (int): Maximum number of images to read. Default is 10.
+            show (bool): Whether to display the images. Default is True.
         Returns:
             list of PIL.Image.Image: List of Image objects containing the images.
         """
@@ -68,16 +73,98 @@ class Leon:
         count = 0
         for root, _, files in os.walk(path):
             for file in files:
-                if file.endswith((".png", ".jpg", ".jpeg", ".gif")):
+                if file.endswith((".png", ".jpg", ".jpeg")):
                     image_path = os.path.join(root, file)
                     with open(image_path, "rb") as f:
                         image = Image.open(f)
-                        plt.imshow(image)
-                        plt.axis("off")
-                        plt.show()
+                        if show:
+                            plt.imshow(image)
+                            plt.axis("off")
+                            plt.show()
                         images.append(image)
                         count += 1
-                        if limit is not None and count >= limit:
-                            return
+                        if limit != -1 and count >= limit:
+                            return images
         if count == 0:
             print("No images found in the directory.")
+        return images
+
+    def detect_duplicates(
+        self, path, hash_type="phash", limit=10, show=True, col_num=5
+    ):
+        """
+        Computes the perceptual hash of the images. And return a list of duplicate images.
+
+        Parameters:
+            path (str): The path to the directory containing the images.
+            hash_type (str): Type of hash to use ("phash", "dhash", or "ahash").
+            limit (int): Maximum number of duplicate images to display.
+            show (bool): Whether to display the duplicate images.
+
+        Returns:
+            list of str: List of perceptual hash strings.
+            list of PIL.Image.Image: List of duplicate images.
+        """
+        hashes = {}
+        duplicate_images = []
+        duplicate_images_names = []
+        count = 0
+
+        # Read the images from the directory
+        for root, _, files in os.walk(path):
+            for file in files:
+                if file.endswith((".png", ".jpg", ".jpeg")):
+                    image_path = os.path.join(root, file)
+                    image = Image.open(image_path)
+
+                    if hash_type == "phash":
+                        hash_function = imagehash.phash
+                    elif hash_type == "dhash":
+                        hash_function = imagehash.dhash
+                    elif hash_type == "ahash":
+                        hash_function = imagehash.average_hash
+
+                    hash = str(hash_function(image))
+
+                    if hash in hashes:
+                        duplicate_images.append(image)
+
+                        # Save image names
+                        duplicate_images_names.append(file)
+                    else:
+                        hashes[hash] = image
+
+                    count += 1
+                    if limit != -1 and count >= limit:
+                        break
+            if limit != -1 and count >= limit:
+                break
+
+        print(f"Number of images processed: {count}")
+        if show:
+            # Display duplicate images side by side
+            num_duplicates = len(duplicate_images)
+            print(f"Number of duplicate images found: {num_duplicates}")
+            if num_duplicates > 1:
+                image_path = os.path.join(root, file)
+
+                print("Paths of duplicate images:")
+                for path in duplicate_images_names:
+                    print(path)
+
+                num_rows = (num_duplicates + col_num - 1) // col_num
+                fig, axs = plt.subplots(
+                    num_rows, min(num_duplicates, col_num), figsize=(20, 12)
+                )
+                axs = axs.flatten()
+
+                for i, img in enumerate(duplicate_images[:num_duplicates]):
+                    axs[i].imshow(img)
+                    axs[i].axis("off")
+
+                # Hide empty subplots
+                for j in range(num_duplicates, len(axs)):
+                    axs[j].axis("off")
+                plt.show()
+            else:
+                print("No duplicate images found.")
