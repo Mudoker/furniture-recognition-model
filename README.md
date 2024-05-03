@@ -28,7 +28,6 @@ Before running this notebook, ensure you have the necessary libraries installed.
 pip install -r requirements.txt # Install the latest version of libraries
 ```
 
-
 ### Author
 
 - [Huu Quoc Doan - s3927776](https://github.com/Mudoker)
