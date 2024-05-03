@@ -7,6 +7,10 @@ import numpy as np
 import imagehash
 
 import matplotlib.pyplot as plt
+from scripts.styler import Styler
+from tabulate import tabulate
+
+styler = Styler()
 
 version = "1.0.3"
 icon = f"""
@@ -120,8 +124,10 @@ class Leon:
         # Dictionary to store the hashes of the images
         hashes = {}
         duplicate_images = []
-        duplicate_images_names = []
+        duplicate_images_dict = {}
         count = 0
+
+        styler.boxify("Duplicate Image Detection")
 
         # Hash function based on the hash_type
         if hash_type == "phash":
@@ -148,9 +154,7 @@ class Leon:
                     # Compute the hash of the image
                     if hash_type == "ssim":
                         min_side = min(image.size)
-                        win_size = min(
-                            7, min_side
-                        )  # Adjust 7 as necessary based on the smallest expected image dimension
+                        win_size = min(7, min_side)
                         hash = lambda img: ssim(
                             np.array(img), np.array(img), win_size=win_size
                         )
@@ -159,33 +163,45 @@ class Leon:
 
                     # Check if the hash already exists in the dictionary
                     if hash in hashes:
-                        duplicate_images.append(image)
-
-                        # Save image names
-                        duplicate_images_names.append(file)
+                        # Add the duplicate image to the list
+                        hashes[hash].append(image_path)
+                        duplicate_images_dict[hash].append(image)
                     else:
-                        hashes[hash] = image
-
+                        # Add the hash to the dictionary
+                        hashes[hash] = [image_path]
+                        duplicate_images_dict[hash] = [image]
                     # Increment the count
                     count += 1
                     if limit != -1 and count >= limit:
                         break
 
-        print(f"Number of images processed: {count}")
+        # Display the duplicate images path
+        for hash, images in hashes.items():
+            if len(images) > 1:
+                print()
+                styler.boxify(f"Hash: {hash}")
+                for image in images:
+                    image_name = os.path.basename(image)
+                    print(f"  - {image_name}")
+
+        print()
+
+        print(f">>> Number of images compared: {count}")
+
+        for hash, images in duplicate_images_dict.items():
+            if len(images) > 1:
+                for image in images:
+                    duplicate_images.append(image)
+                    break
 
         # Display duplicate images side by side
         if show:
             # Get the number of duplicate images
             num_duplicates = len(duplicate_images)
-            print(f"Number of duplicate images found: {num_duplicates}")
+            print(f">>> Number of duplicate images found: {num_duplicates}")
 
             # Display the duplicate images
             if num_duplicates > 1:
-                # Show the paths of duplicate images
-                print("Paths of duplicate images:")
-                for path in duplicate_images_names:
-                    print(path)
-
                 # Display the duplicate images in a grid
                 num_rows = (num_duplicates + col_num - 1) // col_num
                 fig, axs = plt.subplots(
