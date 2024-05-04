@@ -183,7 +183,7 @@ class Leon:
 
                     # Delete the duplicate images
                     if is_delete:
-                        if count > 1:
+                        if counter > 1:
                             os.remove(path)
                             counter -= 1
 
