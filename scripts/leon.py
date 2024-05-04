@@ -8,7 +8,6 @@ import imagehash
 
 import matplotlib.pyplot as plt
 from scripts.styler import Styler
-from tabulate import tabulate
 
 styler = Styler()
 
@@ -105,7 +104,7 @@ class Leon:
         return images
 
     def detect_duplicates(
-        self, path, hash_type="phash", limit=10, show=True, col_num=5
+        self, path, hash_type="phash", limit=10, is_delete=False
     ):
         """
         Computes the perceptual hash of the images. And return a list of duplicate images.
@@ -114,7 +113,7 @@ class Leon:
             path (str): The path to the directory containing the images.
             hash_type (str): Type of hash to use ("phash", "dhash", or "ahash").
             limit (int): Maximum number of duplicate images to display.
-            show (bool): Whether to display the duplicate images.
+            is_delete (bool): Whether to delete the duplicate images.
 
         Returns:
             list of str: List of perceptual hash strings.
@@ -126,8 +125,6 @@ class Leon:
         duplicate_images = []
         duplicate_images_dict = {}
         count = 0
-
-        styler.boxify("Duplicate Image Detection")
 
         # Hash function based on the hash_type
         if hash_type == "phash":
@@ -176,17 +173,22 @@ class Leon:
                         break
 
         # Display the duplicate images path
-        for hash, images in hashes.items():
-            if len(images) > 1:
-                print()
+        for hash, image_paths in hashes.items():
+            if len(image_paths) > 1:
                 styler.boxify(f"Hash: {hash}")
-                for image in images:
-                    image_name = os.path.basename(image)
+                counter = len(image_paths)
+                for path in image_paths:
+                    image_name = os.path.basename(path)
                     print(f"  - {image_name}")
 
-        print()
+                    # Delete the duplicate images
+                    if is_delete:
+                        if count > 1:
+                            os.remove(path)
+                            counter -= 1
 
         print(f">>> Number of images compared: {count}")
+        print()
 
         for hash, images in duplicate_images_dict.items():
             if len(images) > 1:
@@ -194,28 +196,6 @@ class Leon:
                     duplicate_images.append(image)
                     break
 
-        # Display duplicate images side by side
-        if show:
-            # Get the number of duplicate images
-            num_duplicates = len(duplicate_images)
-            print(f">>> Number of duplicate images found: {num_duplicates}")
-
-            # Display the duplicate images
-            if num_duplicates > 1:
-                # Display the duplicate images in a grid
-                num_rows = (num_duplicates + col_num - 1) // col_num
-                fig, axs = plt.subplots(
-                    num_rows, min(num_duplicates, col_num), figsize=(20, 12)
-                )
-                axs = axs.flatten()
-
-                for i, img in enumerate(duplicate_images[:num_duplicates]):
-                    axs[i].imshow(img)
-                    axs[i].axis("off")
-
-                # Hide empty subplots
-                for j in range(num_duplicates, len(axs)):
-                    axs[j].axis("off")
-                plt.show()
-            else:
-                print("No duplicate images found.")
+        if len(duplicate_images) == 0:
+            print(">>> No duplicate images found.")
+            print()
