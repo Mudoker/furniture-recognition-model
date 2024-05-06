@@ -5,6 +5,7 @@ from PIL import Image
 from skimage.metrics import structural_similarity as ssim
 import numpy as np
 import imagehash
+import Augmentor
 
 import matplotlib.pyplot as plt
 from scripts.styler import Styler
@@ -199,3 +200,25 @@ class Leon:
         if len(duplicate_images) == 0:
             print(">>> No duplicate images found.")
             print()
+    
+    def augment(self, path, samples: int):
+        """
+        Augments the images in the directory using the Augmentor library.
+
+        Parameters:
+            path (str): The path to the directory containing the images.
+        """
+        # Create a pipeline
+        p = Augmentor.Pipeline(path)
+
+        # Add operations to the pipeline
+        p.rotate90(probability=0.5)
+        p.rotate270(probability=0.5)
+        p.flip_left_right(probability=0.8)
+        p.flip_top_bottom(probability=0.3)
+        p.rotate(probability=0.7, max_left_rotation=20, max_right_rotation=20)
+        p.resize(probability=1.0, width=350, height=350)
+        p.random_color(probability=0.8, min_factor=0.5, max_factor=1.5)
+
+        # Set the number of samples to generate
+        p.sample(samples)
