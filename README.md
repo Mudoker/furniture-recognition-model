@@ -12,7 +12,7 @@ Since the dataset exceeds the upload limit of GitHub, it is housed in a OneDrive
 
 [Dataset](https://rmiteduau-my.sharepoint.com/personal/bao_nguyenthien_rmit_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments%2FFurniture_Data%2Ezip&parent=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments&ga=1)
 
-Once the dataset is obtained, create a new `data` folder at the root of the project then extract the files and deposit them into the `data/raw` subfolder (create one if not exist). Ensure not to alter the name of the zip file.
+Once the dataset is obtained, create a new `data` folder at the root of the project and then put the zip file into the `data/raw` subfolder (create one if not exist). Ensure not to alter the name of the zip file.
 
 ### Installation
 
