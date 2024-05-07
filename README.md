@@ -30,8 +30,8 @@ pip install -r requirements.txt # Install the latest version of libraries
 
 ### Author
 
-- [Huu Quoc Doan - s3927776](https://github.com/Mudoker)
-- [Seokyung Kim - s3939114@rmit.edu.vn](https://github.com/Mudoker)
+- [Huu Quoc Doan - s3927776@rmit.edu.vn](https://github.com/Mudoker)
+- [Seokyung Kim - s3939114@rmit.edu.vn](https://github.com/lluciiiia)
 - [Nguyen Dinh Viet - s3927291@rmit.edu.vn](https://github.com/Mudoker)
 - [Tran Vu Quang Anh - s3916566@rmit.edu.vn](https://github.com/Mudoker)
 
