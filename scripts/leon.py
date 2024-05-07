@@ -4,6 +4,7 @@ import shutil
 from PIL import Image
 from skimage.metrics import structural_similarity as ssim
 import numpy as np
+import pandas as pd
 import imagehash
 import Augmentor
 
@@ -222,3 +223,47 @@ class Leon:
 
         # Set the number of samples to generate
         p.sample(samples)
+
+    def load_data_frame(self, dir: str) -> pd.DataFrame:
+        data_dict = {
+            'ImgPath': [],
+            'Class': [],
+            'Style': [],
+            'Width': [],
+            'Height': [],
+        }
+
+        data_dir = os.path.relpath(dir)
+
+        categories = [
+            folder
+            for folder in os.listdir(data_dir)
+            if os.path.isdir(os.path.join(data_dir, folder))
+        ]
+
+        for category in categories:
+            category_dir = os.path.join(data_dir, category)
+            styles = [
+                folder
+                for folder in os.listdir(category_dir)
+                if os.path.isdir(os.path.join(category_dir, folder))
+            ]
+
+            for style in styles:
+                style_dir = os.path.join(category_dir, style)
+                for file in os.listdir(style_dir):
+                    img_path = os.path.join(style_dir, file)
+                    data_dict['ImgPath'].append(img_path)
+                    data_dict['Class'].append(category)
+                    data_dict['Style'].append(style)
+                    
+                    # Get width and height of the image
+                    try:
+                        with Image.open(img_path) as img:
+                            width, height = img.size
+                            data_dict['Width'].append(width)
+                            data_dict['Height'].append(height)
+                    except Exception as e:
+                        print(f"Error processing image '{img_path}': {e}")
+        
+        return pd.DataFrame(data_dict)
