@@ -14,6 +14,20 @@ Since the dataset exceeds the upload limit of GitHub, it is housed in a OneDrive
 
 Once the dataset is obtained, create a new `data` folder at the root of the project and then put the zip file into the `data/raw` subfolder (create one if not exist). Ensure not to alter the name of the zip file.
 
+### Branch Naming Convention
+
+When creating branches for development or issue tracking, adhere to the following naming convention:
+
+1. Branch format should be `indicator_title` or `indicator/title` (either should be fine).
+2. Indicator includes:
+   - `feat` for new features
+   - `fix` to fix a bug
+   - `ref` for restructuring folders or clean codes
+   - `style` for changing UI
+   - `perf` for optimizing code for better performance
+3. Example: `feature/univariate_analysis`
+4. Do not include your name in the branch name, as it serves no purposes.
+
 ### Installation
 
 Prior to executing this notebook, ensure the requisite libraries are installed.
