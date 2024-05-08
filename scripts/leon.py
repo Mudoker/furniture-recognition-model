@@ -4,7 +4,9 @@ import shutil
 from PIL import Image
 from skimage.metrics import structural_similarity as ssim
 import numpy as np
+import pandas as pd
 import imagehash
+import Augmentor
 
 import matplotlib.pyplot as plt
 from scripts.styler import Styler
@@ -199,3 +201,69 @@ class Leon:
         if len(duplicate_images) == 0:
             print(">>> No duplicate images found.")
             print()
+    
+    def augment(self, path, samples: int):
+        """
+        Augments the images in the directory using the Augmentor library.
+
+        Parameters:
+            path (str): The path to the directory containing the images.
+        """
+        # Create a pipeline
+        p = Augmentor.Pipeline(path)
+
+        # Add operations to the pipeline
+        p.rotate90(probability=0.5)
+        p.rotate270(probability=0.5)
+        p.flip_left_right(probability=0.8)
+        p.flip_top_bottom(probability=0.3)
+        p.rotate(probability=0.7, max_left_rotation=20, max_right_rotation=20)
+        p.resize(probability=1.0, width=350, height=350)
+        p.random_color(probability=0.8, min_factor=0.5, max_factor=1.5)
+
+        # Set the number of samples to generate
+        p.sample(samples)
+
+    def load_data_frame(self, dir: str) -> pd.DataFrame:
+        data_dict = {
+            'ImgPath': [],
+            'Class': [],
+            'Style': [],
+            'Width': [],
+            'Height': [],
+        }
+
+        data_dir = os.path.relpath(dir)
+
+        categories = [
+            folder
+            for folder in os.listdir(data_dir)
+            if os.path.isdir(os.path.join(data_dir, folder))
+        ]
+
+        for category in categories:
+            category_dir = os.path.join(data_dir, category)
+            styles = [
+                folder
+                for folder in os.listdir(category_dir)
+                if os.path.isdir(os.path.join(category_dir, folder))
+            ]
+
+            for style in styles:
+                style_dir = os.path.join(category_dir, style)
+                for file in os.listdir(style_dir):
+                    img_path = os.path.join(style_dir, file)
+                    data_dict['ImgPath'].append(img_path)
+                    data_dict['Class'].append(category)
+                    data_dict['Style'].append(style)
+                    
+                    # Get width and height of the image
+                    try:
+                        with Image.open(img_path) as img:
+                            width, height = img.size
+                            data_dict['Width'].append(width)
+                            data_dict['Height'].append(height)
+                    except Exception as e:
+                        print(f"Error processing image '{img_path}': {e}")
+        
+        return pd.DataFrame(data_dict)
