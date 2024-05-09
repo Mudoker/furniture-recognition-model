@@ -105,9 +105,7 @@ class Leon:
 
         return images
 
-    def detect_duplicates(
-        self, path, hash_type="phash", limit=10, is_delete=False
-    ):
+    def detect_duplicates(self, path, hash_type="phash", limit=10, is_delete=False):
         """
         Computes the perceptual hash of the images. And return a list of duplicate images.
 
@@ -201,7 +199,7 @@ class Leon:
         if len(duplicate_images) == 0:
             print(">>> No duplicate images found.")
             print()
-    
+
     def augment(self, path, samples: int):
         """
         Augments the images in the directory using the Augmentor library.
@@ -225,12 +223,24 @@ class Leon:
         p.sample(samples)
 
     def load_data_frame(self, dir: str) -> pd.DataFrame:
+        """
+        Load the images from the directory into a pandas DataFrame.
+
+        Parameters:
+
+            dir (str): The directory containing the images.
+
+        Returns:
+
+                pd.DataFrame: A DataFrame containing the image paths, classes, styles, widths, and heights.
+        """
+
         data_dict = {
-            'ImgPath': [],
-            'Class': [],
-            'Style': [],
-            'Width': [],
-            'Height': [],
+            "Path": [],
+            "Class": [],
+            "Style": [],
+            "Width": [],
+            "Height": [],
         }
 
         data_dir = os.path.relpath(dir)
@@ -253,17 +263,36 @@ class Leon:
                 style_dir = os.path.join(category_dir, style)
                 for file in os.listdir(style_dir):
                     img_path = os.path.join(style_dir, file)
-                    data_dict['ImgPath'].append(img_path)
-                    data_dict['Class'].append(category)
-                    data_dict['Style'].append(style)
-                    
+                    data_dict["Path"].append(img_path)
+                    data_dict["Class"].append(category)
+                    data_dict["Style"].append(style)
+
                     # Get width and height of the image
                     try:
                         with Image.open(img_path) as img:
                             width, height = img.size
-                            data_dict['Width'].append(width)
-                            data_dict['Height'].append(height)
+                            data_dict["Width"].append(width)
+                            data_dict["Height"].append(height)
                     except Exception as e:
                         print(f"Error processing image '{img_path}': {e}")
-        
+
         return pd.DataFrame(data_dict)
+
+    def resize_image(self, path, width, height):
+        """
+        Resizes the image to the specified width and height.
+
+        Parameters:
+            path (str): The path to the image file.
+            width (int): The width of the resized image.
+            height (int): The height of the resized image.
+        """
+        # Open the image file
+        with open(path, "rb") as f:
+            image = Image.open(f)
+
+            # Resize the image
+            resized_image = image.resize((width, height))
+
+            # Save the resized image
+            resized_image.save(path)
