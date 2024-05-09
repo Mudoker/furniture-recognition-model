@@ -203,7 +203,15 @@ class Leon:
             print(">>> No duplicate images found.")
             print()
 
-    def augment_image(self, image_path, output_dir, num_images=3):
+    def augment_image(
+        self,
+        image_path,
+        output_dir,
+        df_train,
+        num_images=3,
+        rotation=0.5,
+        contrast=0.5,
+    ):
         """
         Augments an image by applying random transformations.
 
@@ -211,12 +219,20 @@ class Leon:
             image_path (str): The path to the image file.
             output_dir (str): The directory to save the augmented images.
             num_images (int): The number of augmented images to generate. Default is 3.
+            df_train (pd.DataFrame): The DataFrame to store the augmented image paths, classes, styles, widths, and heights.
+            flip_direction (str): The direction to flip the image ("horizontal" or "vertical"). Default is "vertical".
+            rotation (float): The maximum rotation angle in degrees. Default is 0.5.
+            contrast (float): The maximum contrast factor. Default is 0.5.
         """
+        # Initialize df_train as an empty DataFrame if not provided
+        if df_train is None:
+            raise ValueError("df_train is required.")
+
         data_augmentation = Sequential(
             [
-                layers.RandomFlip("vertical"),
-                layers.RandomRotation(0.5),
-                layers.RandomContrast(0.5),
+                layers.RandomFlip(),
+                layers.RandomRotation(rotation),
+                layers.RandomContrast(contrast),
             ]
         )
 
@@ -224,13 +240,21 @@ class Leon:
 
         img_array = np.expand_dims(img, axis=0)
 
-        styler.boxify(f"Augmenting images: {image_path}")
+        styler.boxify(f"Augmenting image: {image_path}")
 
         image_filename = os.path.basename(image_path)
 
+        path_parts = image_path.split(os.path.sep)
+
+        if len(path_parts) >= 5:
+            category = path_parts[-2]
+            style = path_parts[-3]
+        else:
+            category = "unknown"
+            style = "unknown"
+
         # Apply data augmentation transformations
         for i in range(num_images):
-            existing_files = os.listdir(output_dir)
             augmented_img = data_augmentation(img_array)
             augmented_img = (
                 augmented_img.numpy()
@@ -242,12 +266,27 @@ class Leon:
 
             # Save the augmented image
             filename = f"aug_{image_filename}_{i}.jpg"
-            while filename in existing_files:
-                i += 1
-                filename = f"aug_{image_filename}_{i}.jpg"
 
             output_path = os.path.join(output_dir, filename)
             cv2.imwrite(output_path, augmented_img)
+
+            # Add the augmented image to the dataframe
+            new_row = pd.DataFrame(
+                {
+                    "Path": [output_path],
+                    "Category": [category],
+                    "Style": [style],
+                    "Width": [augmented_img.shape[1]],
+                    "Height": [augmented_img.shape[0]],
+                }
+            )
+
+            df_train = pd.concat([df_train, new_row], ignore_index=True)
+
+            # Add the augmented image to the dataframe
+            print(f"  - Saved augmented image: {filename}")
+
+        return df_train
 
     def load_data_frame(self, dir: str) -> pd.DataFrame:
         """
@@ -264,7 +303,7 @@ class Leon:
 
         data_dict = {
             "Path": [],
-            "Class": [],
+            "Category": [],
             "Style": [],
             "Width": [],
             "Height": [],
@@ -291,7 +330,7 @@ class Leon:
                 for file in os.listdir(style_dir):
                     img_path = os.path.join(style_dir, file)
                     data_dict["Path"].append(img_path)
-                    data_dict["Class"].append(category)
+                    data_dict["Category"].append(category)
                     data_dict["Style"].append(style)
 
                     # Get width and height of the image
@@ -324,7 +363,7 @@ class Leon:
             # Save the resized image
             resized_image.save(path)
 
-    def normalise_pixel_values(self, image):
+    def normalise_pixel_values(self, image_path):
         """
         Normalises the pixel values of the image to the range [0, 1].
 
@@ -335,6 +374,7 @@ class Leon:
             np.ndarray: The normalised image as a NumPy array.
         """
         # Convert the image to a NumPy array
+        image = Image.open(image_path)
         image_array = np.array(image)
 
         # Normalise the pixel values to the range [0, 1]
