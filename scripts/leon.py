@@ -6,7 +6,10 @@ from skimage.metrics import structural_similarity as ssim
 import numpy as np
 import pandas as pd
 import imagehash
-import Augmentor
+import keras
+import cv2
+from keras import layers
+from keras.models import Sequential  # type: ignore
 
 import matplotlib.pyplot as plt
 from scripts.styler import Styler
@@ -200,27 +203,51 @@ class Leon:
             print(">>> No duplicate images found.")
             print()
 
-    def augment(self, path, samples: int):
+    def augment_image(self, image_path, output_dir, num_images=3):
         """
-        Augments the images in the directory using the Augmentor library.
+        Augments an image by applying random transformations.
 
         Parameters:
-            path (str): The path to the directory containing the images.
+            image_path (str): The path to the image file.
+            output_dir (str): The directory to save the augmented images.
+            num_images (int): The number of augmented images to generate. Default is 3.
         """
-        # Create a pipeline
-        p = Augmentor.Pipeline(path)
+        data_augmentation = Sequential(
+            [
+                layers.RandomFlip("vertical"),
+                layers.RandomRotation(0.5),
+                layers.RandomContrast(0.5),
+            ]
+        )
 
-        # Add operations to the pipeline
-        p.rotate90(probability=0.5)
-        p.rotate270(probability=0.5)
-        p.flip_left_right(probability=0.8)
-        p.flip_top_bottom(probability=0.3)
-        p.rotate(probability=0.7, max_left_rotation=20, max_right_rotation=20)
-        p.resize(probability=1.0, width=350, height=350)
-        p.random_color(probability=0.8, min_factor=0.5, max_factor=1.5)
+        img = cv2.imread(image_path)
 
-        # Set the number of samples to generate
-        p.sample(samples)
+        img_array = np.expand_dims(img, axis=0)
+
+        styler.boxify(f"Augmenting images: {image_path}")
+
+        image_filename = os.path.basename(image_path)
+
+        # Apply data augmentation transformations
+        for i in range(num_images):
+            existing_files = os.listdir(output_dir)
+            augmented_img = data_augmentation(img_array)
+            augmented_img = (
+                augmented_img.numpy()
+            )  # Convert from TensorFlow tensor to numpy array
+            augmented_img = augmented_img[0]
+
+            # Convert image to correct data type and range for OpenCV
+            augmented_img = np.clip(augmented_img, 0, 255).astype(np.uint8)
+
+            # Save the augmented image
+            filename = f"aug_{image_filename}_{i}.jpg"
+            while filename in existing_files:
+                i += 1
+                filename = f"aug_{image_filename}_{i}.jpg"
+
+            output_path = os.path.join(output_dir, filename)
+            cv2.imwrite(output_path, augmented_img)
 
     def load_data_frame(self, dir: str) -> pd.DataFrame:
         """
@@ -296,3 +323,30 @@ class Leon:
 
             # Save the resized image
             resized_image.save(path)
+
+    def normalise_pixel_values(self, image):
+        """
+        Normalises the pixel values of the image to the range [0, 1].
+
+        Parameters:
+            image (PIL.Image.Image): The image to normalise.
+
+        Returns:
+            np.ndarray: The normalised image as a NumPy array.
+        """
+        # Convert the image to a NumPy array
+        image_array = np.array(image)
+
+        # Normalise the pixel values to the range [0, 1]
+        normalised_image = image_array / 255.0
+
+        return normalised_image
+
+    def remove_folder(self, path):
+        """
+        Removes a folder and its contents.
+
+        Parameters:
+            path (str): The path to the folder to remove.
+        """
+        shutil.rmtree(path)
