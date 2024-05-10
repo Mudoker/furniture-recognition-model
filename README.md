@@ -10,7 +10,11 @@ This guide delineates the essential steps to establish the project structure for
 
 Since the dataset exceeds the upload limit of GitHub, it is housed in a OneDrive folder. Please procure the dataset from the provided link:
 
-[Dataset](https://rmiteduau-my.sharepoint.com/personal/bao_nguyenthien_rmit_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments%2FFurniture_Data%2Ezip&parent=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments&ga=1)
+Note: Only use the `Dataset for EDA` if your task is related to the EDA steps as it contains raw images taken from the lecturer. For subsequent steps, please use the latter dataset to avoid re-running the entire cleaning process
+
+[Dataset for EDA](https://rmiteduau-my.sharepoint.com/personal/bao_nguyenthien_rmit_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments%2FFurniture_Data%2Ezip&parent=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments&ga=1)
+
+[Processed Dataset](https://rmiteduau-my.sharepoint.com/:u:/g/personal/s3927776_student_rmit_edu_au/Ec3FSIyZfBdDi8SvBxrMuh4BTiQmDwm3QIEf4BKIOr0Phg?e=3Tcx6v)
 
 Once the dataset is obtained, create a new `data` folder at the root of the project and then put the zip file into the `data/raw` subfolder (create one if not exist). Ensure not to alter the name of the zip file.
 
