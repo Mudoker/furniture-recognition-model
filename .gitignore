@@ -1,1 +1,4 @@
-data/
+data
+.DS_Store
+myenv
+scripts/__pycache__
