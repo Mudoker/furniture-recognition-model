@@ -10,3 +10,5 @@ imbalanced-learn==0.12.2
 imagehash==4.3.1
 scikit-image==0.23.2
 opencv-python==4.9.0.80
+keras==3.3.3
+pillow==10.2.0
