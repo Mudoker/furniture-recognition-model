@@ -36,9 +36,9 @@ When creating branches for development or issue tracking, adhere to the followin
 
 Prior to executing this notebook, ensure the requisite libraries are installed.
 
-- #### **Obtain the latest version of Python**
+- #### **Obtain the recommended version of Python**
 
-  - Python 3.12.2: [Downloads](https://www.python.org/downloads/).
+  - Python 3.12.2: [Downloads]([https://www.python.org/downloads/](https://www.python.org/downloads/release/python-3122/)).
 
 - #### **Acquire the packages**
 
