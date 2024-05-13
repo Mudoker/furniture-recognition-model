@@ -10,7 +10,7 @@ This guide delineates the essential steps to establish the project structure for
 
 Since the dataset exceeds the upload limit of GitHub, it is housed in a OneDrive folder. Please procure the dataset from the provided link:
 
-Note 1: Only use the `Dataset for EDA` if your task is related to the EDA steps as it contains raw images taken from the lecturer. For subsequent steps, please use the latter dataset to avoid re-running the entire cleaning process.
+Note 1: Only use the `Dataset for EDA` if your task is related to the **EDA steps** as it contains raw images taken from the lecturer. For subsequent steps, please use the latter dataset to avoid re-running the entire cleaning process.
 
 Note 2 (Only applicable to EDA Dataset): Once the dataset is obtained, create a new `data` folder at the root of the project and then put the zip file into the `data/raw` subfolder (create one if not exist). Ensure not to alter the name of the zip file.
 
