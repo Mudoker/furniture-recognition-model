@@ -16,7 +16,7 @@ Note 2 (Only applicable to EDA Dataset): Once the dataset is obtained, create a 
 
 [Dataset for EDA](https://rmiteduau-my.sharepoint.com/personal/bao_nguyenthien_rmit_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments%2FFurniture_Data%2Ezip&parent=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments&ga=1)
 
-[Processed Dataset](https://rmiteduau-my.sharepoint.com/:u:/g/personal/s3927776_student_rmit_edu_au/Ec3FSIyZfBdDi8SvBxrMuh4BTiQmDwm3QIEf4BKIOr0Phg?e=3Tcx6v)
+[Processed Dataset](https://rmiteduau-my.sharepoint.com/:u:/g/personal/s3927776_student_rmit_edu_au/Ec3FSIyZfBdDi8SvBxrMuh4BaKMLwDFfFZu9QLpKcx8WgA?e=snVpuQ)
 
 ### Branch Naming Convention
 
