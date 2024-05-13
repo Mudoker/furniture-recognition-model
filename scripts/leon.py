@@ -251,8 +251,8 @@ class Leon:
         path_parts = image_path.split(os.path.sep)
 
         # Extract the category and style from the image path
-        category = path_parts[-2]
-        style = path_parts[-3]
+        category = path_parts[-3]
+        style = path_parts[-2]
 
         # Apply data augmentation transformations
         for i in range(num_images):
