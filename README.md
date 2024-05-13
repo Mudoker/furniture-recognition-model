@@ -14,6 +14,8 @@ Note 1: Only use the `Dataset for EDA` if your task is related to the EDA steps 
 
 Note 2 (Only applicable to EDA Dataset): Once the dataset is obtained, create a new `data` folder at the root of the project and then put the zip file into the `data/raw` subfolder (create one if not exist). Ensure not to alter the name of the zip file.
 
+Note 3 (Only for preprocessing): This note pertains specifically to the preprocessing notebook file. When you execute this file, a pop-up message will appear on your screen seeking confirmation for actions that may alter or remove data (destructive actions). To proceed with the process, you must enter either "y" or "yes" in the confirmation pop-up window. Any other keystroke will terminate the process. If you intend to re-run the entire preprocessing notebook and confirm all pop-up messages, entering "y" or "yes" at each prompt is necessary.
+
 [Dataset for EDA](https://rmiteduau-my.sharepoint.com/personal/bao_nguyenthien_rmit_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments%2FFurniture_Data%2Ezip&parent=%2Fpersonal%2Fbao_nguyenthien_rmit_edu_vn%2FDocuments&ga=1)
 
 [Processed Dataset](https://rmiteduau-my.sharepoint.com/:u:/g/personal/s3927776_student_rmit_edu_au/Ec3FSIyZfBdDi8SvBxrMuh4BaKMLwDFfFZu9QLpKcx8WgA?e=snVpuQ)
