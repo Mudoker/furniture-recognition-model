@@ -197,7 +197,7 @@ class Leon:
                 for image in images:
                     duplicate_images.append(image)
                     break
-
+                
     def augment_image(
         self,
         image_path,
