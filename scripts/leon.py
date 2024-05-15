@@ -184,30 +184,19 @@ class Leon:
         # Display the duplicate images path
         for hash, image_paths in hashes.items():
             if len(image_paths) > 1:
-                styler.boxify(f"Hash: {hash}")
                 counter = len(image_paths)
                 for path in image_paths:
-                    image_name = os.path.basename(path)
-                    print(f"  - {image_name}")
-
                     # Delete the duplicate images
                     if is_delete:
                         if counter > 1:
                             os.remove(path)
                             counter -= 1
 
-        print(f">>> Number of images compared: {count}")
-        print()
-
         for hash, images in duplicate_images_dict.items():
             if len(images) > 1:
                 for image in images:
                     duplicate_images.append(image)
                     break
-
-        if len(duplicate_images) == 0:
-            print(">>> No duplicate images found.")
-            print()
 
     def augment_image(
         self,
