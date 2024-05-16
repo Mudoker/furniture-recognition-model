@@ -112,6 +112,7 @@ class Leon:
 
         return images
 
+        
     def detect_duplicates(self, path, hash_type="phash", limit=10, is_delete=False):
         """
         Computes the perceptual hash of the images. And return a list of duplicate images.
@@ -134,6 +135,7 @@ class Leon:
         duplicate_images = []
         duplicate_images_dict = {}
         count = 0
+        duplicate = 0
 
         # Hash function based on the hash_type
         if hash_type == "phash":
@@ -185,6 +187,7 @@ class Leon:
         for hash, image_paths in hashes.items():
             if len(image_paths) > 1:
                 counter = len(image_paths)
+                duplicate += len(image_paths) - 1
                 for path in image_paths:
                     # Delete the duplicate images
                     if is_delete:
@@ -197,6 +200,7 @@ class Leon:
                 for image in images:
                     duplicate_images.append(image)
                     break
+        return duplicate
                 
     def augment_image(
         self,
