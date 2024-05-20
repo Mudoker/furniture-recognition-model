@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import imagehash
 import cv2
-from keras import layers
-from keras.models import Sequential  # type: ignore
+# from keras import layers
+# from keras.models import Sequential  # type: ignore
 import matplotlib.pyplot as plt
 from scripts.styler import Styler
 
