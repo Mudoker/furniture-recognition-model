@@ -2,35 +2,11 @@ import os
 import importlib
 import inspect
 
+# Styling constants
 BULLET_POINT = ">>>"
 
 
 class Utils:
-    VALID_ENVIRONMENTS = ["dev", "gcolab", "kaggle"]
-
-    def __init__(self):
-        self._env = "dev"  # Use a private attribute
-
-    @property
-    def env(self):
-        """Get the current environment."""
-        return self._env
-
-    @env.setter
-    def env(self, new_env):
-        """Set the environment, validating the input."""
-        if new_env not in self.VALID_ENVIRONMENTS:
-            raise ValueError(
-                f"Invalid environment: {new_env}. Choose from: {', '.join(self.VALID_ENVIRONMENTS)}"
-            )
-        self._env = new_env
-        print(f"{BULLET_POINT} Environment set to {new_env}")
-
-    @env.getter
-    def env(self):
-        """Get the current environment."""
-        return self._env
-
     @staticmethod  # Make get_file_path a static method
     def get_file_path():
         """Get the absolute path of the current file."""
@@ -42,9 +18,28 @@ class Utils:
         return os.path.dirname(Utils.get_file_path())  # Call static method directly
 
     @staticmethod
-    def import_modules(module_list):
+    def import_modules(module_list=[]):
         """Import modules with optional aliases into the caller's namespace."""
+
+        core_modules = [
+            ("os", None),
+            ("sys", None),
+            ("importlib", None),
+            ("inspect", None),
+            ("pandas", "pd"),
+            ("numpy", "np"),
+            ("matplotlib.pyplot", "plt"),
+            ("seaborn", "sns"),
+            ("tabulate", None),
+            ("scripts.leon", "leon"),
+            ("scripts.constants", "const"),
+            ("scripts.styler", "styler"),
+        ]
+
         frame = inspect.currentframe().f_back  # Get the caller's frame
+
+        module_list += core_modules  # Add core modules to the list
+
         for name, alias in module_list:
             try:
                 module = importlib.import_module(name)
