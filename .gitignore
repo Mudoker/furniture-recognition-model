@@ -3,3 +3,4 @@ data/
 myenv
 scripts/__pycache__
 notebooks/model_development/cache_cnn
+notebooks/model_development/cache_resnet

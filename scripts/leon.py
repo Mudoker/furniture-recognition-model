@@ -14,23 +14,8 @@ from scripts.styler import Styler
 
 styler = Styler()
 
-version = "1.0.3"
-icon = f"""
-        @|\\@@
-       -  @@@@                                                            LEON 1.0.0
-      /7   @@@@                                         This is Leon, the friendly lion. He is here to help you
-     /    @@@@@@                                     Leon is tailored to manipulate images, data and visualizations
-     \\-' @@@@@@@@`-_______________                                      Made by: Team X
-      -@@@@@@@@@             /    \\                                     Version: {version}
- _______/    /_       ______/      |__________-
-/,__________/  `-.___/,_____________----------_)
-"""
-
 
 class Leon:
-    def __init__(self):
-        print(icon)
-
     def read_zip(self, path):
         """
         Extracts a ZIP file, reads the image files contained within it, and deletes the ZIP file afterwards.
@@ -42,7 +27,8 @@ class Leon:
             list of PIL.Image.Image: List of Image objects containing the images from the ZIP file.
         """
         if not os.path.exists(path):
-            raise FileNotFoundError(f"File not found: {path}")
+            print(f"File not found: {path} or has been unzipped.")
+            return
 
         # Get the directory where the ZIP file will be extracted
         extract_dir = os.path.splitext(path)[0]
@@ -142,8 +128,6 @@ class Leon:
             hash_function = imagehash.dhash
         elif hash_type == "ahash":
             hash_function = imagehash.average_hash
-        elif hash_type == "ssim":
-            pass
         else:
             raise ValueError(
                 "Invalid hash type. Use 'phash', 'dhash', 'ahash' or 'ssim'."
@@ -158,14 +142,7 @@ class Leon:
                     image = Image.open(image_path)
 
                     # Compute the hash of the image
-                    if hash_type == "ssim":
-                        min_side = min(image.size)
-                        win_size = min(7, min_side)
-                        hash = lambda img: ssim(
-                            np.array(img), np.array(img), win_size=win_size
-                        )
-                    else:
-                        hash = hash_function(image)
+                    hash = hash_function(image)
 
                     # Check if the hash already exists in the dictionary
                     if hash in hashes:
@@ -203,7 +180,7 @@ class Leon:
         image_path,
         output_dir,
         df_train,
-        num_images=2,
+        num_images=5,
         rotation=0.5,
         contrast=0.5,
     ):
@@ -213,7 +190,7 @@ class Leon:
         Parameters:
             image_path (str): The path to the image file.
             output_dir (str): The directory to save the augmented images.
-            num_images (int): The number of augmented images to generate. Default is 3.
+            num_images (int): The number of augmented images to generate. Default is 5.
             df_train (pd.DataFrame): The DataFrame to store the augmented image paths, classes, styles, widths, and heights.
             flip_direction (str): The direction to flip the image ("horizontal" or "vertical"). Default is "vertical".
             rotation (float): The maximum rotation angle in degrees. Default is 0.5.
@@ -232,11 +209,13 @@ class Leon:
         # Data augmentation transformations
         data_augmentation = Sequential(
             [
-                layers.RandomFlip(),  # Randomly flip the image horizontally or vertically
-                layers.RandomRotation(rotation),  # Randomly rotate the image
-                layers.RandomContrast(
-                    contrast
-                ),  # Randomly adjust the contrast of the image
+                layers.RandomFlip("horizontal_and_vertical"),
+                layers.RandomRotation(0.4),
+                layers.RandomCrop(0.8, 0.8),
+                layers.RandomContrast(0.2),
+                layers.RandomZoom(0.3),
+                layers.RandomTranslation(0.2, 0.2),
+                layers.RandomSheer(0.1),
             ]
         )
 
