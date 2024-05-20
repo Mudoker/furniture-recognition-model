@@ -9,7 +9,7 @@ COLAB_PATH = "/content"
 LOCAL_PATH = "../.."
 
 # Relative paths to the data directories
-DATA_DIR = "data"
+DATA_DIR = "data/datasets"
 RAW_DATA_DIR = f"{DATA_DIR}/raw/Furniture_Data/Furniture_Data"
 PROCESSED_DATA_DIR = f"{DATA_DIR}/processed"
 TEST_DATA_DIR = f"{DATA_DIR}/test"
