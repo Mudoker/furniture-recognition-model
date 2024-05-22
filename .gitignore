@@ -1,6 +1,11 @@
-data/
+data_1/
+data_2/
 .DS_Store
 myenv
 scripts/__pycache__
-notebooks/model_development/cache_cnn
-notebooks/model_development/cache_resnet
+notebooks/model_development/cache_cnn/
+notebooks/model_development/cache_resnet/
+notebooks/model_development/cahce_ann/
+notebooks/model_development/feature_extract/
+*.pb
+variables.*

@@ -34,6 +34,7 @@ class Utils:
             ("scripts.leon", "leon"),
             ("scripts.constants", "const"),
             ("scripts.styler", "styler"),
+            ("tensorflow", "tf"),
         ]
 
         frame = inspect.currentframe().f_back  # Get the caller's frame
